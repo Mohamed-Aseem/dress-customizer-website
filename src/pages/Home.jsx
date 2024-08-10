@@ -10,7 +10,8 @@ import {
 } from '../config/motion';
 
 import state from '../store/index'
-import { CustomButton } from '../components';
+// import { CustomButton } from '../components';
+import CustomButton from '../components/CustomButton';
 
 function Home() {
 
