@@ -1,15 +1,18 @@
-import React, { useRef } from 'react'
-import { easing } from 'maath'
-import { useFrame } from '@react-three/fiber'
+import React, { useRef, useEffect } from 'react'
 import { AccumulativeShadows, RandomizedLight } from '@react-three/drei'
 
 const Backdrop = () => {
   const shadows = useRef()
+
+  useEffect(() => {
+    shadows.current?.reset()
+  }, [])
+
   return (
     <AccumulativeShadows
       ref={shadows}
       temporal
-      frames={60}
+      frames={20}
       alphaTest={0.85}
       scale={5}
       rotation={[Math.PI / 2, 0, 0]}
