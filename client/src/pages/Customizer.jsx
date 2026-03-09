@@ -17,6 +17,7 @@ import Tab from '../components/Tab'
 
 
 function Customizer() {
+  const currency = import.meta.env.VITE_API_URL
   const snap = useSnapshot(state)
 
   const [file, setFile] = useState('')
@@ -57,7 +58,21 @@ function Customizer() {
     if (!prompt) return alert("Please enter a prompt");
 
     try {
-      // call our backemd to generaye am ai image!
+      setGeneratingImg(true)
+      const response = await fetch(`${currency}/api/v1/dalle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          prompt
+        })
+      })
+
+      const data = await response.json()
+
+      handleDecals(type, `data:image/png;base64,${data.photo}`)
+
     } catch (error) {
       alert(error)
     } finally {
@@ -83,10 +98,11 @@ function Customizer() {
         break;
       case "stylishShirt":
         state.isFullTexture = !activeFilterTab[tabName]
-
+        break;
       default:
         state.isFullTexture = false;
         state.isLogoTexture = true;
+        break;
     }
 
     // after setting the state, activeFilterTab is updated

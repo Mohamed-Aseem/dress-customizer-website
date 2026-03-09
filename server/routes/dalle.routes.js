@@ -1,6 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
 import OpenAI from "openai";
+import axios from 'axios';
 
 dotenv.config();
 
@@ -14,23 +15,39 @@ router.route('/').get((req, res) => {
     res.status(200).json({ message: 'Hello from DALL.E Routes' })
 })
 
-router.route('/').post(async (req, res) => {
+router.post("/", async (req, res) => {
     try {
+
         const { prompt } = req.body;
-        const result = await openai.images.generate({
-            model: "gpt-image-1",
-            prompt: prompt,
-            size: "1024x1024"
+
+        const response = await axios({
+            url: "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0",
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+                "Content-Type": "application/json",
+                "Accept": "image/png"
+            },
+            data: {
+                inputs: prompt,
+            },
+            responseType: "arraybuffer",
         });
 
-        const image = result.data[0].b64_json
-        
-        res.status(200).json({ photo: image })
+        const base64Image = Buffer.from(response.data, "binary").toString("base64");
+
+        res.status(200).json({
+            photo: base64Image,
+        });
 
     } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Something went wrong' })
+        if (error.response && error.response.data) {
+            console.error(Buffer.from(error.response.data).toString());
+        } else {
+            console.error(error.message);
+        }
+        res.status(500).json({ message: "Something went wrong" });
     }
-})
+});
 
 export default router
