@@ -58,8 +58,7 @@ Originally integrated with **OpenAI**, but due to **API credit limitations**, th
 
 ## 🌐 Website URLs
 
-- **Frontend:** https://dress-customizer-website-git-main-aseem-ismails-projects.vercel.app/
-- **Backend:** https://dress-customizer-website-3jcn.vercel.app/
+- **Frontend:** https://dress-customizer-website.vercel.app/
 
 ---
 
